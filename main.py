@@ -1,15 +1,16 @@
 import os
-import staypresent
+import asyncio
+from bot import bot  # твой экземпляр commands.Bot
 
-# Запускаем простой веб-сервер с /health для Render
-staypresent.web.json({
-    "status": "running",
-    "service": "my-discord-bot"
-})
+async def main():
+    token = os.getenv("DISCORD_TOKEN")
+    if not token:
+        print("❌ Нет токена!")
+        return
+    try:
+        await bot.start(token)
+    except Exception as e:
+        print(f"❌ Бот упал: {e}")
 
-# Запускаем твоего основного бота (файл bot.py)
-# PORT читаем из переменных окружения Render
-staypresent.run(
-    "bot.py",
-    port=int(os.getenv("PORT", 8080)),
-)
+if __name__ == "__main__":
+    asyncio.run(main())
